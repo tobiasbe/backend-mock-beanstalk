@@ -1,0 +1,144 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a sample swagger definition."
+  version: "1.0.0"
+  title: "Users"
+host: "localhost"
+basePath: "/api/v1"
+tags:
+- name: "users"
+  description: "Everything about your users"
+  externalDocs:
+    description: "Find out more"
+    url: "https://medium.com/intive-developers"
+schemes:
+- "https"
+paths:
+  /users:
+    post:
+      tags:
+      - "users"
+      summary: "Add a new user"
+      description: "This endpoint can be used to add a new user"
+      operationId: "addUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "user object that needs to be added"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "Users"
+    put:
+      tags:
+      - "users"
+      summary: "Update an existing user"
+      description: ""
+      operationId: "updateUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User object that needs to be updated"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "User not found"
+        405:
+          description: "Validation exception"
+      x-swagger-router-controller: "Users"
+  /user/{user_id}:
+    get:
+      tags:
+      - "users"
+      summary: "Find user by ID"
+      description: "Returns a single user"
+      operationId: "getUserById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "user_id"
+        in: "path"
+        description: "ID of user to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "User not found"
+      x-swagger-router-controller: "Users"
+    delete:
+      tags:
+      - "users"
+      summary: "Deletes a user"
+      description: ""
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "user_id"
+        in: "path"
+        description: "User id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "User not found"
+      x-swagger-router-controller: "Users"
+definitions:
+  User:
+    type: "object"
+    required:
+    - "avatar"
+    - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        example: 0
+      name:
+        type: "string"
+        example: "dummy"
+        minLength: 4
+        maxLength: 30
+      avatar:
+        type: "string"
+        example: "https://upload.wikimedia.org/wikipedia/commons/7/7//Profile_avatar_placeholder_large.png"
+        description: "An uri to an avatar image"
+        pattern: "^/(https:|http)\\/\\/.*$/g"
+      status:
+        type: "string"
+        description: "user status"
+        enum:
+        - "active"
+        - "inactive"
+        - "invalid"
+    example:
+      name: "dummy"
+      id: 0
+      avatar: "https://upload.wikimedia.org/wikipedia/commons/7/7//Profile_avatar_placeholder_large.png"
+      status: "active"
